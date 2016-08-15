@@ -79,6 +79,10 @@ class BleManager  {
     });
   }
 
+  retrieveConnectedPeripheralsWithServices(serviceUUIDs) {
+    return bleManager.retrieveConnectedPeripheralsWithServices(serviceUUIDs);
+  }
+
 }
 
 module.exports = new BleManager();

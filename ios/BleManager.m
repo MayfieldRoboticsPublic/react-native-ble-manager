@@ -395,7 +395,11 @@ RCT_EXPORT_METHOD(startNotification:(NSString *)deviceUUID
                        failCallback:(nonnull RCTResponseSenderBlock)failCallback) {
     NSLog(@"startNotification");
     
-    BLECommandContext *context = [self getData:deviceUUID serviceUUIDString:serviceUUID characteristicUUIDString:characteristicUUID prop:CBCharacteristicPropertyNotify failCallback:failCallback];
+    BLECommandContext *context = [self getData:deviceUUID
+                             serviceUUIDString:serviceUUID
+                      characteristicUUIDString:characteristicUUID
+                                          prop:CBCharacteristicPropertyNotify
+                                  failCallback:failCallback];
     
     if (context) {
         CBPeripheral *peripheral = [context peripheral];
@@ -632,13 +636,16 @@ RCT_EXPORT_METHOD(retrieveConnectedPeripheralsWithServices:(NSArray *)serviceUUI
     }
 
     NSArray *connectedPeripherals = [manager retrieveConnectedPeripheralsWithServices:serviceUUIDs];
+    NSMutableArray *connectedPeripheralUUIDs = [NSMutableArray new];
     for (CBPeripheral *peripheral in connectedPeripherals) {
+        [connectedPeripheralUUIDs addObject:[peripheral asDictionary]];
+
         if (![peripherals containsObject:peripheral]) {
             [peripherals addObject:peripheral];
         }
     }
 
-    resolve(peripherals);
+    resolve(connectedPeripheralUUIDs);
 }
 
 @end

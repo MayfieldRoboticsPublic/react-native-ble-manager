@@ -9,7 +9,7 @@
 @property (nonatomic, retain) NSDictionary *advertising;
 @property (nonatomic, retain) NSNumber *advertisementRSSI;
 
--(void)setAdvertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber*)rssi;
+-(void)setAdvertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)rssi;
 -(NSDictionary *)asDictionary;
 -(NSString *)uuidAsString;
 

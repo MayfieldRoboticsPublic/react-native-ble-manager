@@ -524,11 +524,9 @@ RCT_EXPORT_METHOD(stopNotification:(NSString *)deviceUUID
 - (CBCharacteristic *)findCharacteristicFromUUID:(CBUUID *)UUID
                                          service:(CBService *)service
                                             prop:(CBCharacteristicProperties)prop {
-    NSLog(@"Looking for %@ with properties %lu", UUID, (unsigned long)prop);
     for (int i = 0; i < [service.characteristics count]; i++) {
         CBCharacteristic *c = [service.characteristics objectAtIndex:i];
         if ((c.properties & prop) != 0x0 && [c.UUID.UUIDString isEqualToString: UUID.UUIDString]) {
-            NSLog(@"Found %@", UUID);
             return c;
         }
     }
@@ -537,11 +535,9 @@ RCT_EXPORT_METHOD(stopNotification:(NSString *)deviceUUID
 
 // Find a characteristic in service by UUID
 - (CBCharacteristic *)findCharacteristicFromUUID:(CBUUID *)UUID service:(CBService *)service {
-    NSLog(@"Looking for %@", UUID);
     for (int i = 0; i < [service.characteristics count]; i++) {
         CBCharacteristic *c = [service.characteristics objectAtIndex:i];
         if ([c.UUID.UUIDString isEqualToString: UUID.UUIDString]) {
-            NSLog(@"Found %@", UUID);
             return c;
         }
     }

@@ -23,10 +23,10 @@ static char ADVERTISEMENT_RSSI_IDENTIFER;
     }
 
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    [dictionary setObject:uuidString forKey: @"id"];
+    [dictionary setObject:uuidString forKey:@"id"];
 
     if ([self name]) {
-        [dictionary setObject:[self name] forKey:@"name"];
+        [dictionary setObject:self.name forKey:@"name"];
     }
 
     /*
@@ -37,7 +37,7 @@ static char ADVERTISEMENT_RSSI_IDENTIFER;
      }*/
 
     if ([self advertising]) {
-        [dictionary setObject:[self advertising] forKey:@"advertising"];
+        [dictionary setObject:self.advertising forKey:@"advertising"];
     }
 
     if ([[self services] count] > 0) {
@@ -90,7 +90,7 @@ static char ADVERTISEMENT_RSSI_IDENTIFER;
         NSLog(@"%@", serviceData);
 
         for(CBUUID *key in serviceData) {
-            [serviceData setObject:dataToArrayBuffer([serviceData objectForKey:key]) forKey:[key UUIDString]];
+            [serviceData setObject:dataToArrayBuffer([serviceData objectForKey:key]) forKey:key.UUIDString];
             [serviceData removeObjectForKey:key];
         }
     }
@@ -100,10 +100,10 @@ static char ADVERTISEMENT_RSSI_IDENTIFER;
     NSMutableArray *serviceUUIDStrings;
 
     if (serviceUUIDs) {
-        serviceUUIDStrings = [[NSMutableArray alloc] initWithCapacity:serviceUUIDs.count];
+        serviceUUIDStrings = [[NSMutableArray alloc] initWithCapacity:[serviceUUIDs count]];
 
         for (CBUUID *uuid in serviceUUIDs) {
-            [serviceUUIDStrings addObject:[uuid UUIDString]];
+            [serviceUUIDStrings addObject:uuid.UUIDString];
         }
 
         // replace the UUID list with list of strings
@@ -116,10 +116,10 @@ static char ADVERTISEMENT_RSSI_IDENTIFER;
     NSMutableArray *solicitiedServiceUUIDStrings;
     if (solicitiedServiceUUIDs) {
         // NSLog(@"%@", solicitiedServiceUUIDs);
-        solicitiedServiceUUIDStrings = [[NSMutableArray alloc] initWithCapacity:solicitiedServiceUUIDs.count];
+        solicitiedServiceUUIDStrings = [[NSMutableArray alloc] initWithCapacity:[solicitiedServiceUUIDs count]];
 
         for (CBUUID *uuid in solicitiedServiceUUIDs) {
-            [solicitiedServiceUUIDStrings addObject:[uuid UUIDString]];
+            [solicitiedServiceUUIDStrings addObject:uuid.UUIDString];
         }
 
         // replace the UUID list with list of strings
@@ -143,31 +143,31 @@ static char ADVERTISEMENT_RSSI_IDENTIFER;
     NSMutableArray *characteristicList = [NSMutableArray new];
 
     // This can move into the CBPeripherial Extension
-    for (CBService *service in [self services]) {
-        [serviceList addObject:[[service UUID] UUIDString]];
+    for (CBService *service in self.services) {
+        [serviceList addObject:service.UUID.UUIDString];
         for (CBCharacteristic *characteristic in service.characteristics) {
             NSMutableDictionary *characteristicDictionary = [NSMutableDictionary new];
-            [characteristicDictionary setObject:[[service UUID] UUIDString] forKey:@"service"];
-            [characteristicDictionary setObject:[[characteristic UUID] UUIDString] forKey:@"characteristic"];
+            [characteristicDictionary setObject:service.UUID.UUIDString forKey:@"service"];
+            [characteristicDictionary setObject:characteristic.UUID.UUIDString forKey:@"characteristic"];
 
-            if ([characteristic value]) {
-                [characteristicDictionary setObject:dataToArrayBuffer([characteristic value]) forKey:@"value"];
+            if (characteristic.value) {
+                [characteristicDictionary setObject:dataToArrayBuffer(characteristic.value) forKey:@"value"];
             }
-            if ([characteristic properties]) {
+            if (characteristic.properties) {
                 //[characteristicDictionary setObject:[NSNumber numberWithInt:[characteristic properties]] forKey:@"propertiesValue"];
                 [characteristicDictionary setObject:[self decodeCharacteristicProperties:characteristic] forKey:@"properties"];
             }
             // permissions only exist on CBMutableCharacteristics
-            [characteristicDictionary setObject:[NSNumber numberWithBool:[characteristic isNotifying]] forKey:@"isNotifying"];
+            [characteristicDictionary setObject:[NSNumber numberWithBool:characteristic.isNotifying] forKey:@"isNotifying"];
             [characteristicList addObject:characteristicDictionary];
 
             // descriptors always seem to be nil, probably a bug here
             NSMutableArray *descriptorList = [NSMutableArray new];
             for (CBDescriptor *descriptor in characteristic.descriptors) {
                 NSMutableDictionary *descriptorDictionary = [NSMutableDictionary new];
-                [descriptorDictionary setObject:[[descriptor UUID] UUIDString] forKey:@"descriptor"];
-                if ([descriptor value]) { // should always have a value?
-                    [descriptorDictionary setObject:[descriptor value] forKey:@"value"];
+                [descriptorDictionary setObject:descriptor.UUID.UUIDString forKey:@"descriptor"];
+                if (descriptor.value) { // should always have a value?
+                    [descriptorDictionary setObject:descriptor.value forKey:@"value"];
                 }
                 [descriptorList addObject:descriptorDictionary];
             }

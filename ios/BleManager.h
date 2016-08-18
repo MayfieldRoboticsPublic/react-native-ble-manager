@@ -1,8 +1,7 @@
-#import "RCTBridgeModule.h"
 #import <CoreBluetooth/CoreBluetooth.h>
+#import "RCTEventEmitter.h"
 
-
-@interface BleManager : NSObject <RCTBridgeModule, CBCentralManagerDelegate, CBPeripheralDelegate> {
+@interface BleManager : RCTEventEmitter <CBCentralManagerDelegate, CBPeripheralDelegate> {
     NSString *discoverPeripherialCallbackId;
     NSMutableDictionary *connectCallbacks;
     NSMutableDictionary *readCallbacks;

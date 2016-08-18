@@ -1,88 +1,73 @@
 'use strict';
-var React = require('react-native');
-var bleManager = React.NativeModules.BleManager;
+const React = require('react-native');
+const bleManager = React.NativeModules.BleManager;
+const BleEventEmitter = new React.NativeEventEmitter(bleManager);
 
-class BleManager  {
+const Events = {
+  DidUpdateValueForCharacteristic: "BleManagerDidUpdateValueForCharacteristic",
+  DidStopScan: "BleManagerDidStopScan",
+  DidDiscoverPeripheral: "BleManagerDidDiscoverPeripheral",
+  DidUpdateState: "BleManagerDidUpdateState",
+  DidDisconnectPeripheral: "BleManagerDidDisconnectPeripheral",
+};
 
-  read(peripheralId, serviceUUID, characteristicUUID) {
-    return new Promise((fulfill, reject) => {
-      bleManager.read(peripheralId, serviceUUID, characteristicUUID, (success) => {
-        fulfill(success);
-      }, (fail) => {
-        reject(fail);
-      });
-    });
-  }
-
-  write(peripheralId, serviceUUID, characteristicUUID, data) {
-    return new Promise((fulfill, reject) => {
-      bleManager.write(peripheralId, serviceUUID, characteristicUUID, data, (success) => {
-        fulfill();
-      }, (fail) => {
-        reject(fail);
-      });
-    });
-  }
-
-  connect(peripheralId) {
-    return new Promise((fulfill, reject) => {
-      bleManager.connect(peripheralId,(success) => {
-        fulfill();
-      }, (fail) => {
-        reject(fail);
-      });
-    });
-  }
-
-  disconnect(peripheralId) {
-    return new Promise((fulfill, reject) => {
-      bleManager.disconnect(peripheralId,(success) => {
-        fulfill();
-      }, (fail) => {
-        reject(fail);
-      });
-    });
-  }
-
-  startNotification(peripheralId, serviceUUID, characteristicUUID) {
-    return new Promise((fulfill, reject) => {
-      bleManager.startNotification(peripheralId, serviceUUID, characteristicUUID, (success) => {
-        fulfill();
-      }, (fail) => {
-        reject(fail);
-      });
-    });
-  }
-
-  stopNotification(peripheralId, serviceUUID, characteristicUUID) {
-    return new Promise((fulfill, reject) => {
-      bleManager.stopNotification(peripheralId, serviceUUID, characteristicUUID, (success) => {
-        fulfill();
-      }, (fail) => {
-        reject(fail);
-      });
-    });
-  }
-
+class BleManager {
   checkState() {
     bleManager.checkState();
   }
 
-  scan(serviceUUIDs, seconds, allowDuplicates) {
-    return new Promise((fulfill, reject) => {
-      if (allowDuplicates == null) {
-        allowDuplicates = false;
-      }
-      bleManager.scan(serviceUUIDs, seconds, allowDuplicates, (success) => {
-        fulfill();
-      });
-    });
+  scan(serviceUUIDs, seconds, allowDuplicates = false) {
+    return bleManager.scan(serviceUUIDs, seconds, allowDuplicates);
+  }
+
+  connect(peripheralId) {
+    return bleManager.connect(peripheralId);
+  }
+
+  disconnect(peripheralId) {
+    return bleManager.disconnect(peripheralId);
+  }
+
+  read(peripheralId, serviceUUID, characteristicUUID) {
+    return bleManager.read(peripheralId, serviceUUID, characteristicUUID);
+  }
+
+  write(peripheralId, serviceUUID, characteristicUUID, data) {
+    return bleManager.write(peripheralId, serviceUUID, characteristicUUID, data);
+  }
+
+  startNotification(peripheralId, serviceUUID, characteristicUUID) {
+    return bleManager.startNotification(peripheralId, serviceUUID, characteristicUUID);
+  }
+
+  stopNotification(peripheralId, serviceUUID, characteristicUUID) {
+    return bleManager.stopNotification(peripheralId, serviceUUID, characteristicUUID);
   }
 
   retrieveConnectedPeripheralsWithServices(serviceUUIDs) {
     return bleManager.retrieveConnectedPeripheralsWithServices(serviceUUIDs);
   }
 
+  // Event Registration
+  addUpdateValueForCharacteristicListener(listener) {
+    return BleEventEmitter.addListener(Events.DidUpdateValueForCharacteristic, listener);
+  }
+
+  addStopScanListener(listener) {
+    return BleEventEmitter.addListener(Events.DidStopScan, listener);
+  }
+
+  addDiscoverPeripheralListener(listener) {
+    return BleEventEmitter.addListener(Events.DidDiscoverPeripheral, listener);
+  }
+
+  addUpdateStateListener(listener) {
+    return BleEventEmitter.addListener(Events.DidUpdateState, listener);
+  }
+
+  addDisconnectPeripheralListener(listener) {
+    return BleEventEmitter.addListener(Events.DidDisconnectPeripheral, listener);
+  }
 }
 
 module.exports = new BleManager();

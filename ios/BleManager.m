@@ -34,10 +34,10 @@ RCT_EXPORT_MODULE();
 - (NSArray<NSString *> *)supportedEvents {
     return @[
              @"BleManagerDidUpdateValueForCharacteristic",
-             @"BleManagerStopScan",
-             @"BleManagerDiscoverPeripheral",
+             @"BleManagerDidStopScan",
+             @"BleManagerDidDiscoverPeripheral",
              @"BleManagerDidUpdateState",
-             @"BleManagerDisconnectPeripheral",
+             @"BleManagerDidDisconnectPeripheral",
              ];
 }
 
@@ -217,7 +217,7 @@ RCT_EXPORT_METHOD(scan:(NSArray *)serviceUUIDStrings
 -(void)stopScanTimer:(NSTimer *)timer {
     NSLog(@"Stop scan");
     [self.manager stopScan];
-    [self sendEventWithName:@"BleManagerStopScan" body:@{}];
+    [self sendEventWithName:@"BleManagerDidStopScan" body:@{}];
 }
 
 - (void)centralManager:(CBCentralManager *)central
@@ -228,7 +228,7 @@ RCT_EXPORT_METHOD(scan:(NSArray *)serviceUUIDStrings
     [peripheral setAdvertisementData:advertisementData RSSI:RSSI];
 
     NSLog(@"Discovered peripheral: %@", [peripheral asDictionary]);
-    [self sendEventWithName:@"BleManagerDiscoverPeripheral" body:[peripheral asDictionary]];
+    [self sendEventWithName:@"BleManagerDidDiscoverPeripheral" body:[peripheral asDictionary]];
 
 }
 
@@ -479,7 +479,7 @@ RCT_EXPORT_METHOD(stopNotification:(NSString *)deviceUUID
         NSLog(@"Error: %@", error);
     }
 
-    [self sendEventWithName:@"BleManagerDisconnectPeripheral" body:@{
+    [self sendEventWithName:@"BleManagerDidDisconnectPeripheral" body:@{
                                                                      @"peripheral": peripheral.uuidAsString
                                                                      }];
 }

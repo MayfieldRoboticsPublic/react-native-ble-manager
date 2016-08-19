@@ -10,6 +10,7 @@
     NSMutableDictionary *notificationCallbacks;
     NSMutableDictionary *stopNotificationCallbacks;
     NSMutableDictionary *connectCallbackLatches;
+    bool isObserved;
 }
 
 @property (strong, nonatomic) NSMutableSet *peripherals;

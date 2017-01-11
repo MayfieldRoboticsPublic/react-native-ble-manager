@@ -1,5 +1,5 @@
 #import <CoreBluetooth/CoreBluetooth.h>
-#import "RCTEventEmitter.h"
+#import <React/RCTEventEmitter.h>
 
 @interface BleManager : RCTEventEmitter <CBCentralManagerDelegate, CBPeripheralDelegate> {
     NSString *discoverPeripherialCallbackId;

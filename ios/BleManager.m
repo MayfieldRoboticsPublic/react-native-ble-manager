@@ -1,7 +1,7 @@
 #import "BleManager.h"
-#import "RCTBridge.h"
-#import "RCTConvert.h"
-#import "RCTEventDispatcher.h"
+#import <React/RCTBridge.h>
+#import <React/RCTConvert.h>
+#import <React/RCTEventDispatcher.h>
 #import "NSData+Conversion.h"
 #import "CBPeripheral+Extensions.h"
 #import "BLECommandContext.h"
@@ -649,12 +649,12 @@ RCT_EXPORT_METHOD(retrieveConnectedPeripheralsWithServices:(NSArray *)serviceUUI
     NSMutableArray *connectedPeripheralUUIDs = [NSMutableArray new];
     for (CBPeripheral *peripheral in connectedPeripherals) {
         [connectedPeripheralUUIDs addObject:[peripheral asDictionary]];
-        
+
         if (![self.peripherals containsObject:peripheral]) {
             [self.peripherals addObject:peripheral];
         }
     }
-    
+
     resolve(connectedPeripheralUUIDs);
 }
 
